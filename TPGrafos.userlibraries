@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="google.code.gson">
+    <archive path="C:/Users/gustavo.evaristo/IdeaProjects/TPGrafos/lib/gson-2.10.jar" />
+  </library>
+</eclipse-userlibraries>
+
