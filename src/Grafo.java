@@ -184,23 +184,6 @@ public class Grafo {
     	return vertices.find(verticeA).existeAresta(verticeB);
     }
     
-    /**
-     * Verifica se este é um grafo completo. 
-     * @return TRUE para grafo completo, FALSE caso contrário
-     */
-    public boolean completo(){
-        boolean resposta = true;
-        
-       return resposta;
-    }
-
-    public Grafo subGrafo(Lista<Vertice> vertices){
-        Grafo subgrafo = new Grafo("Subgrafo de "+this.nome);
-        
-
-        return subgrafo;
-    }
-    
     public Vertice[] obterVertices() {
     	return vertices.allElements(new Vertice[this.ordem()]);
     }

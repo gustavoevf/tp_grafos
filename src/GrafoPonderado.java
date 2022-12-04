@@ -20,7 +20,7 @@ public class GrafoPonderado extends Grafo {
      * @param origem Vértice de origem
      * @param destino Vértice de destino
      */
-    public boolean addAresta(int origem, int destino, int peso){
+    public boolean addAresta(int origem, int destino, double peso){
         boolean adicionou = false;
         Vertice saida = this.existeVertice(origem);
         Vertice chegada = this.existeVertice(destino);
@@ -100,24 +100,5 @@ public class GrafoPonderado extends Grafo {
         }
         
         writer.close();
-    }
-
-    @Override
-    public GrafoPonderado subGrafo(Lista<Vertice> listaVertice) {
-        Vertice[] listaVertices = new Vertice[this.ordem()];
-        listaVertices = listaVertice.allElements(listaVertices);
-        GrafoPonderado novoSubGrafo = new GrafoPonderado("subGrafo");
-
-        for(int i = 0; i < listaVertices.length && listaVertices[i] != null; i++){
-            novoSubGrafo.addVertice(listaVertices[i].getVertice());
-
-            for(int j = 0; j < novoSubGrafo.ordem() - 1; j++){
-                if(this.existeAresta(listaVertices[i].getVertice(), listaVertices[j].getVertice()) != null) {
-                    novoSubGrafo.addAresta(listaVertices[i].getVertice(), listaVertices[j].getVertice(), this.existeAresta(listaVertices[i].getVertice(), listaVertices[j].getVertice()).peso());
-                }
-            }
-        }
-
-        return novoSubGrafo;
     }
 }

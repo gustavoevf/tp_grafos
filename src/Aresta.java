@@ -24,16 +24,16 @@
 
 public class Aresta {
 
-    private int peso;
+    private double peso;
     private int destino;
     private boolean visitada;
 
     /**
      * Construtor para arestas com ou sem peso
      * @param peso Peso da aresta
-     * @param dest Vértice de destino
+     * @param destino Vértice de destino
      */
-    public Aresta(int peso, int destino){
+    public Aresta(double peso, int destino){
         this.peso = peso;
         this.destino = destino;
         this.visitada = false;
@@ -43,7 +43,7 @@ public class Aresta {
      * Método de acesso para o peso da aresta
      * @return the peso
      */
-    public int peso() {
+    public double peso() {
         return this.peso;
     }
    
@@ -66,7 +66,5 @@ public class Aresta {
     public boolean visitada(){
         return this.visitada;
     }
-    
-    
 
 }

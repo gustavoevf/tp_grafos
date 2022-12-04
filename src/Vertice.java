@@ -39,13 +39,12 @@ public class Vertice {
     }
     
     
-    public boolean addAresta(int destino, int peso) {
+    public boolean addAresta(int destino, double peso) {
         return this.arestas.add(destino, new Aresta(peso, destino));
     }
   /**
      * Adiciona uma aresta neste vértice para um destino
-     * @param peso Peso da aresta (1 para grafos não ponderados)
-     * @param dest Vértice de destino
+     * @param destino Vértice de destino
      */
     public boolean addAresta(int destino){
         return this.arestas.add(destino,new Aresta(0, destino));
@@ -53,7 +52,7 @@ public class Vertice {
 
     /**
      * Verifica se já existe aresta entre este vértice e um destino. Método privado
-     * @param dest Vértice de destino
+     * @param destino Vértice de destino
      * @return TRUE se existe aresta, FALSE se não
      */
     public Aresta existeAresta(int destino){
