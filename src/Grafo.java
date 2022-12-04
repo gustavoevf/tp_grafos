@@ -6,10 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 /** 
  * MIT License
@@ -159,6 +156,22 @@ public class Grafo {
         }
 
         return visitados;
+    }
+
+
+    public void buscaEmProdunfidade(int inicio) {
+        boolean[] visitados = new boolean[this.vertices.size()];
+        buscaEmProdunfidadeRecursiva(inicio, visitados);
+    }
+
+    private void buscaEmProdunfidadeRecursiva(int atual, boolean[] visitados) {
+        System.out.println(atual);
+        visitados[atual] = true;
+        this.vertices.find(atual).visitar();
+        for (Aresta destino : this.vertices.find(atual).obterArestas()) {
+            if (!visitados[destino.destino()])
+                buscaEmProdunfidadeRecursiva(destino.destino(), visitados);
+        }
     }
     
     public Vertice[] listaDeBusca(int id) {

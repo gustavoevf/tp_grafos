@@ -62,9 +62,12 @@ public class Main {
         grafo.salvar("grafoResult");
         for (int i = 0; i < cidades.length; i++) {
             if (grafo.existeVertice(i).obterArestas().length != 4) {
-                System.out.println(i + " " + grafo.existeVertice(i).obterArestas().length);
+//                System.out.println(i + " " + grafo.existeVertice(i).obterArestas().length);
             }
         }
+
+        // Busca em profundidade
+        grafo.buscaEmProdunfidade(29);
 
     }
 }
