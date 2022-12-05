@@ -141,53 +141,95 @@ public class Grafo {
 
     }
 
-    public Vertice[] buscaProfundidade(int id, Vertice[] visitados) {
-
-        Vertice[] listaDeBusca = listaDeBusca(id);
-
-        for (int j = 0; j < listaDeBusca.length; j++) {
-            if (listaDeBusca[j] != null) {
-                if (!listaDeBusca[j].visitado()) {
-                	listaDeBusca[j].visitar();
-                    visitados[j] = listaDeBusca[j];
-                    buscaProfundidade(listaDeBusca[j].getVertice(), visitados);
-                }
-            }
-        }
-
-        return visitados;
-    }
-
-
-    public void buscaEmProdunfidade(int inicio) {
+    public void buscaEmProfundidade(int inicio) {
         boolean[] visitados = new boolean[this.vertices.size()];
-        buscaEmProdunfidadeRecursiva(inicio, visitados);
+        buscaEmProfundidadeRecursiva(inicio, visitados);
     }
 
-    private void buscaEmProdunfidadeRecursiva(int atual, boolean[] visitados) {
-        System.out.println(atual);
+    private void buscaEmProfundidadeRecursiva(int atual, boolean[] visitados) {
+        System.out.print(atual + " ");
         visitados[atual] = true;
         this.vertices.find(atual).visitar();
         for (Aresta destino : this.vertices.find(atual).obterArestas()) {
             if (!visitados[destino.destino()])
-                buscaEmProdunfidadeRecursiva(destino.destino(), visitados);
+                buscaEmProfundidadeRecursiva(destino.destino(), visitados);
         }
     }
-    
-    public Vertice[] listaDeBusca(int id) {
 
-        Vertice[] verticesArray = this.obterVertices();
+    public void buscaEmLargura(int v)
+    {
+        boolean visitados[] = new boolean[this.vertices.size()];
 
-        Vertice[] listaDeBusca = new Vertice[verticesArray.length];
-        for (int i = 0; i < verticesArray.length; i++) {
-            if (verticesArray[i].existeAresta(id) != null) {
-            	listaDeBusca[i] = verticesArray[i];
+        // Create a queue for BFS
+        LinkedList<Integer> lista = new LinkedList<Integer>();
+
+        // Mark the current node as visited and enqueue it
+        visitados[v] = true;
+        this.vertices.find(v).visitar();
+        lista.add(v);
+
+        while (lista.size() != 0)
+        {
+            v = lista.poll();
+            System.out.print(v + " ");
+
+
+            Iterator<Aresta> i = Arrays.stream(this.vertices.find(v).obterArestas()).iterator();
+
+            while (i.hasNext())
+            {
+                Aresta a = i.next();
+                if (!visitados[a.destino()])
+                {
+                    visitados[a.destino()] = true;
+                    this.vertices.find(a.destino()).visitar();
+                    lista.add(a.destino());
+                }
             }
         }
-
-        return listaDeBusca;
     }
-    
+
+    public void caminhoEntreDoisVertices(int v1, int v2)
+    {
+        boolean visitados[] = new boolean[this.vertices.size()];
+
+        // Create a queue for BFS
+        LinkedList<Integer> lista = new LinkedList<Integer>();
+
+        // Mark the current node as visited and enqueue it
+        visitados[v1] = true;
+        this.vertices.find(v1).visitar();
+        lista.add(v1);
+
+        boolean achou = false;
+        while (lista.size() != 0)
+        {
+            if(achou){
+                break;
+            }
+
+            v1 = lista.poll();
+            System.out.print(v1 + " ");
+
+            if(v1 == v2){
+                break;
+            }
+
+
+            Iterator<Aresta> i = Arrays.stream(this.vertices.find(v1).obterArestas()).iterator();
+
+            while (i.hasNext())
+            {
+                Aresta a = i.next();
+                if (!visitados[a.destino()])
+                {
+                    visitados[a.destino()] = true;
+                    this.vertices.find(a.destino()).visitar();
+                    lista.add(a.destino());
+                }
+            }
+        }
+    }
 
     public Vertice existeVertice(int idVertice){
         return this.vertices.find(idVertice);
@@ -207,27 +249,6 @@ public class Grafo {
 
     public int ordem(){
         return this.vertices.size();
-    }
-    
-    public boolean caminhoEntreVertices(int vo, int vd, Vertice[] visitados) {
-
-        Vertice[] listaDeBusca = listaDeBusca(vo);
-        if(vo == vd) {
-        	return true;
-        }
-
-        for (int j = 0; j < listaDeBusca.length; j++) {
-        	
-            if (listaDeBusca[j] != null) {
-            	
-                if (!listaDeBusca[j].visitado()) {
-                	listaDeBusca[j].visitar();
-                    visitados[j] = listaDeBusca[j];
-                    caminhoEntreVertices(listaDeBusca[j].getVertice(), vd, visitados);
-                }
-            }
-        }
-        return false;
     }
 
 }

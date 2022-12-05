@@ -67,7 +67,24 @@ public class Main {
         }
 
         // Busca em profundidade
-        grafo.buscaEmProdunfidade(29);
+        System.out.println("------------------------Busca em profundidade------------------------");
+        grafo.buscaEmProfundidade(0);
+        System.out.println("");
+        System.out.println("");
+
+
+        // Busca em largura
+        System.out.println("------------------------Busca em largura------------------------");
+        grafo.buscaEmLargura(0);
+        System.out.println("");
+        System.out.println("");
+
+        // Caminho entre dois vertices
+        System.out.println("------------------------Caminho entre dois vertices------------------------");
+        grafo.caminhoEntreDoisVertices(0, 104);
+        System.out.println("");
+        System.out.println("");
+
 
     }
 }
