@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +14,8 @@ public class GrafoPonderado extends Grafo {
 		super(nome);
 		// TODO Auto-generated constructor stub
 	}
+
+	private City[] cidades;
 
    
 	/**
@@ -33,72 +37,73 @@ public class GrafoPonderado extends Grafo {
         return adicionou;
 
     }
-    
-    public void carregar(String nomeArquivo) throws IOException{
-    	//Lendo arquivo
-    	BufferedReader buffRead = new BufferedReader(new FileReader("src/" + nomeArquivo));
-		String linha = "";
-		
-		int qtdVertices = 0;
-		linha = buffRead.readLine();
-		
-		//Obtendo quantidades de vertices do grafo
-		qtdVertices = Integer.parseInt(linha.split("=")[1].trim());
-		System.out.println("Quantidade de vertices: " + qtdVertices);
-		
-		//Obtendo os vertices do grafo
-		System.out.println("Vertices:");
-		for(int v = 0; v < qtdVertices; v++) {
-			linha = buffRead.readLine();
-			
-			System.out.println(linha);
-			//Adicionando vertices e removendo espaço da linha
-			addVertice(Integer.parseInt(linha.trim()));
-		}
-		
-		int qtdArestas = 0;
-		linha = buffRead.readLine();
-		
-		System.out.println("");
-		//Obtendo quantidades de vertices do grafo
-		qtdArestas = Integer.parseInt(linha.split("=")[1].trim());
-		System.out.println("Quantidade arestas: " + qtdArestas);
-		//Obtendo os vertices do grafo
-		System.out.println("Arestas:");
-		for(int a = 0; a < qtdArestas; a++) {
-			linha = buffRead.readLine();
-			
-			//Separa os 2 vertices de origem e destino para adicionar uma aresta
-			int verticeOrigem = Integer.parseInt(linha.trim().split("-")[0]);
-			int verticeDestino = Integer.parseInt(linha.trim().split("-")[1]);
-			int peso = Integer.parseInt(linha.trim().split("-")[2]);
-			
-			System.out.println(verticeOrigem + " - " + verticeDestino + " - " + peso);
-			addAresta(verticeOrigem, verticeDestino, peso);
-		}
-		buffRead.close();
-    }
 
-    public void salvar(String nomeArquivo) throws FileNotFoundException, UnsupportedEncodingException{
-    	File file = new File(nomeArquivo);
-        PrintWriter writer = new PrintWriter(nomeArquivo, "UTF-8");
-        writer.println("----------------- " + this.nome + " -----------------");
-        writer.print("Vertices do Grafo: ");
-        for (Vertice vertice : this.obterVertices()) {
-            writer.print(vertice.getVertice() + " ");
-        }
-        writer.println("");
-        writer.println("Arestas do Grafo: ");
-        for(int a = 0; a < this.obterVertices().length; a++) {
-        	if(this.obterVertices()[a].obterArestas() != null) {
-        		
-        		for(Aresta ar : this.obterVertices()[a].obterArestas()) {
-        			writer.println("Do vertice " + this.obterVertices()[a].getVertice() + " para o vertice "+ ar.destino() + " com o peso " + ar.peso());
-        		}
-        	}
-        	
-        }
-        
-        writer.close();
-    }
+	public void preencher(String nomeArquivo) throws FileNotFoundException {
+		Gson gson = new Gson();
+		cidades = gson.fromJson(new FileReader(nomeArquivo), City[].class);
+
+		Double[][] distancias = new Double[cidades.length][cidades.length];
+		//inclui todos os vértices (cidades)
+		for (int i = 0; i < cidades.length; i++) {
+			addVertice(i);
+		}
+
+		//itera sobre as cidades e cria as arestas correspondentes, avaliando a distância
+		for (int i = 0; i < cidades.length; i++) {
+			Integer[] cidadesProximas = new Integer[4];
+			int insercoes = 0;
+			for (int j = 0; j < cidades.length; j++) {
+				if(j < i) {
+					distancias[i][j] = distancias[j][i];
+				} else {
+					distancias[i][j] = cidades[i].distancia(cidades[j]);
+				}
+
+				//para cada possível destino, verifica se já possui as 4 conexões
+				if(existeVertice(j).obterArestas().length < 4) {
+					if (insercoes < 4) {
+						Integer indexNulo = null;
+						for(int k = 0, encontrou = 0; k < cidadesProximas.length && encontrou == 0; k++) {
+							encontrou = cidadesProximas[k] == null ? 1 : 0;
+							indexNulo = k;
+						}
+						cidadesProximas[indexNulo] = j;
+						insercoes++;
+					} else {
+						for (int k = 0, alterou = 0; k < cidadesProximas.length && alterou == 0; k++) {
+							if (cidadesProximas[k] == null || distancias[i][j] < distancias[i][cidadesProximas[k]] || distancias[i][cidadesProximas[k]] == 0) {
+								cidadesProximas[k] = j;
+								alterou = 1;
+							}
+						}
+					}
+				}
+			}
+
+			for (int j = 0; j < cidadesProximas.length && existeVertice(i).obterArestas().length < 4; j++) {
+				if(cidadesProximas[j] != null) {
+					addAresta(i, cidadesProximas[j], distancias[i][j]);
+				}
+			}
+		}
+	}
+
+	public void print() {
+		System.out.println("----------------- " + this.nome + " -----------------");
+		System.out.print("Vertices do Grafo: ");
+		for (Vertice vertice : this.obterVertices()) {
+			System.out.println(vertice.getVertice() + " " + cidades[vertice.getVertice()].city);
+		}
+		System.out.println("");
+		System.out.println("Arestas do Grafo: ");
+		for(int a = 0; a < this.obterVertices().length; a++) {
+			if(this.obterVertices()[a].obterArestas() != null) {
+
+				for(Aresta ar : this.obterVertices()[a].obterArestas()) {
+					System.out.println("Do vertice " + this.obterVertices()[a].getVertice() + " para o vertice "+ ar.destino() + " com o peso " + ar.peso());
+				}
+			}
+
+		}
+	}
 }

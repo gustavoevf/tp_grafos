@@ -68,6 +68,15 @@ public class Vertice {
         return this.id;
 
     }
+
+    public boolean removerAresta(int key) {
+        return this.arestas.remove(key);
+    }
+
+    public boolean removerAresta() {
+        this.arestas = new ABB<>();
+        return true;
+    }
     
     /**
      * Retorna o grau do vértice

@@ -47,72 +47,7 @@ public class Grafo {
         this.vertices = new ABB<>();
     }
 
-    public void carregar(String nomeArquivo) throws IOException{
-    	//Lendo arquivo
-    	BufferedReader buffRead = new BufferedReader(new FileReader("src/" + nomeArquivo));
-		String linha = "";
-		
-		int qtdVertices = 0;
-		linha = buffRead.readLine();
-		
-		//Obtendo quantidades de vertices do grafo
-		qtdVertices = Integer.parseInt(linha.split("=")[1].trim());
-		System.out.println("Quantidade de vertices: " + qtdVertices);
-		
-		//Obtendo os vertices do grafo
-		System.out.println("Vertices:");
-		for(int v = 0; v < qtdVertices; v++) {
-			linha = buffRead.readLine();
-			
-			System.out.println(linha);
-			//Adicionando vertices e removendo espaço da linha
-			addVertice(Integer.parseInt(linha.trim()));
-		}
-		
-		int qtdArestas = 0;
-		linha = buffRead.readLine();
-		
-		System.out.println("");
-		//Obtendo quantidades de vertices do grafo
-		qtdArestas = Integer.parseInt(linha.split("=")[1].trim());
-		System.out.println("Quantidade arestas: " + qtdArestas);
-		//Obtendo os vertices do grafo
-		System.out.println("Arestas:");
-		for(int a = 0; a < qtdArestas; a++) {
-			linha = buffRead.readLine();
-			
-			//Separa os 2 vertices de origem e destino para adicionar uma aresta
-			int verticeOrigem = Integer.parseInt(linha.trim().split("-")[0]);
-			int verticeDestino = Integer.parseInt(linha.trim().split("-")[1]);
-			
-			System.out.println(verticeOrigem + " - " + verticeDestino);
-			addAresta(verticeOrigem, verticeDestino);
-		}
-		buffRead.close();
-    }
 
-    public void salvar(String nomeArquivo) throws FileNotFoundException, UnsupportedEncodingException{
-    	File file = new File(nomeArquivo);
-        PrintWriter writer = new PrintWriter(nomeArquivo, "UTF-8");
-        writer.println("----------------- " + this.nome + " -----------------");
-        writer.print("Vertices do Grafo: ");
-        for (Vertice vertice : this.obterVertices()) {
-            writer.print(vertice.getVertice() + " ");
-        }
-        writer.println("");
-        writer.println("Arestas do Grafo: ");
-        for(int a = 0; a < this.obterVertices().length; a++) {
-        	if(this.obterVertices()[a].obterArestas() != null) {
-        		
-        		for(Aresta ar : this.obterVertices()[a].obterArestas()) {
-        			writer.println("Do vertice " + this.obterVertices()[a].getVertice() + " para o vertice "+ ar.destino());
-        		}
-        	}
-        	
-        }
-        
-        writer.close();
-    }
     /**
      * Adiciona, se possível, um vértice ao grafo. O vértice é auto-nomeado com o próximo id disponível.
      */
@@ -231,6 +166,51 @@ public class Grafo {
         }
     }
 
+    public void subtrairVertice(Vertice[] vertices) {
+        if(vertices != null) {
+            for (int i = 0; i < vertices.length; i++) {
+                subtrairVertice(vertices[i]);
+            }
+        }
+    }
+
+    public void subtrairVertice(Vertice vertice) {
+        if(vertice != null) {
+            this.vertices.remove(vertice.getVertice());
+            subtrairAresta(vertice.getVertice());
+        }
+    }
+
+
+    public void subtrairAresta(int idVerticeA, int idVerticeB) {
+        if(this.vertices.find(idVerticeA) != null) {
+            Aresta[] arestas = this.vertices.find(idVerticeA).obterArestas();
+            Aresta aresta = Arrays.stream(arestas).filter(x -> x.destino() == idVerticeB).findAny().orElse(null);
+            this.vertices.find(idVerticeA).removerAresta(aresta.destino());
+        }
+
+        if(this.vertices.find(idVerticeB) != null) {
+            Aresta[] arestas = this.vertices.find(idVerticeB).obterArestas();
+            Aresta aresta = Arrays.stream(arestas).filter(x -> x.destino() == idVerticeA).findAny().orElse(null);
+            this.vertices.find(idVerticeB).removerAresta(aresta.destino());
+        }
+    }
+
+    public void subtrairAresta(int idVertice) {
+        if(this.vertices.find(idVertice) != null) {
+            this.vertices.find(idVertice).removerAresta();
+        }
+
+        for (int i =0; i < vertices.size(); i++) {
+            Vertice vertice = this.vertices.find(i);
+            if(vertice != null) {
+                Aresta[] arestas = this.vertices.find(vertice.getVertice()).obterArestas();
+                Aresta aresta = Arrays.stream(arestas).filter(x -> x.destino() == idVertice).findAny().orElse(null);
+                this.vertices.find(vertice.getVertice()).removerAresta(idVertice);
+            }
+        }
+    }
+
     public Vertice existeVertice(int idVertice){
         return this.vertices.find(idVertice);
     }
@@ -250,5 +230,4 @@ public class Grafo {
     public int ordem(){
         return this.vertices.size();
     }
-
 }

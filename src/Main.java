@@ -9,69 +9,22 @@ import java.util.Arrays;
 
 public class Main {
 
-    public static void main(String[] args) throws java.io.FileNotFoundException, UnsupportedEncodingException {
-        Gson gson = new Gson();
-        City[] cidades = gson.fromJson(new FileReader("data/br.json"), City[].class);
-
+    public static void main(String[] args) throws java.io.FileNotFoundException {
         GrafoPonderado grafo = new GrafoPonderado("grafoCidades");
-        Double[][] distancias = new Double[cidades.length][cidades.length];
-        //inclui todos os vértices (cidades)
-        for (int i = 0; i < cidades.length; i++) {
-            grafo.addVertice(i);
-        }
 
-        //itera sobre as cidades
-        for (int i = 0; i < cidades.length; i++) {
-            Integer[] cidadesProximas = new Integer[4];
-            int insercoes = 0;
-            for (int j = 0; j < cidades.length; j++) {
-                if(j < i) {
-                    distancias[i][j] = distancias[j][i];
-                } else {
-                    distancias[i][j] = cidades[i].distancia(cidades[j]);
-                }
+        // Preenchimento seguindo os critérios estabelecidos
+        grafo.preencher("data/br.json");
 
-                //para cada possível destino, verifica se já possui as 4 conexões
-                if(grafo.existeVertice(j).obterArestas().length < 4) {
-                    if (insercoes < 4) {
-                        Integer indexNulo = null;
-                        for(int k = 0, encontrou = 0; k < cidadesProximas.length && encontrou == 0; k++) {
-                            encontrou = cidadesProximas[k] == null ? 1 : 0;
-                            indexNulo = k;
-                        }
-                        cidadesProximas[indexNulo] = j;
-                        insercoes++;
-                    } else {
-                        for (int k = 0, alterou = 0; k < cidadesProximas.length && alterou == 0; k++) {
-                            if (cidadesProximas[k] == null || distancias[i][j] < distancias[i][cidadesProximas[k]] || distancias[i][cidadesProximas[k]] == 0) {
-                                cidadesProximas[k] = j;
-                                alterou = 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (int j = 0; j < cidadesProximas.length && grafo.existeVertice(i).obterArestas().length < 4; j++) {
-                if(cidadesProximas[j] != null) {
-                    grafo.addAresta(i, cidadesProximas[j], distancias[i][j]);
-                }
-            }
-        }
-
-        grafo.salvar("grafoResult");
-        for (int i = 0; i < cidades.length; i++) {
-            if (grafo.existeVertice(i).obterArestas().length != 4) {
-//                System.out.println(i + " " + grafo.existeVertice(i).obterArestas().length);
-            }
-        }
+        // Listagem
+        grafo.print();
+        System.out.println("");
+        System.out.println("");
 
         // Busca em profundidade
         System.out.println("------------------------Busca em profundidade------------------------");
         grafo.buscaEmProfundidade(0);
         System.out.println("");
         System.out.println("");
-
 
         // Busca em largura
         System.out.println("------------------------Busca em largura------------------------");
@@ -85,6 +38,23 @@ public class Main {
         System.out.println("");
         System.out.println("");
 
+        // Subtração de Vértice 50
+        System.out.println("------------------------Subtracao de vertice------------------------");
+        grafo.subtrairVertice(grafo.obterVertices()[50]);
+        System.out.println("");
+        grafo.print();
+        System.out.println("");
+        System.out.println("");
 
+
+        // Substração de 1 Aresta do vertice 20
+        System.out.println("------------------------Subtracao de aresta------------------------");
+        Vertice v = grafo.obterVertices()[20];
+        grafo.subtrairAresta(20, v.obterArestas()[0].destino());
+        grafo.print();
+        System.out.println("");
+        System.out.println("");
+
+        
     }
 }
