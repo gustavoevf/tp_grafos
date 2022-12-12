@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.List;
 
 public class GrafoPonderado extends Grafo {
 
@@ -106,4 +108,10 @@ public class GrafoPonderado extends Grafo {
 
 		}
 	}
+
+	public void dijkstra(int idVertice)
+	{
+
+	}
+
 }

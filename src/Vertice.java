@@ -38,26 +38,8 @@ public class Vertice {
         this.visitado = false;
     }
     
-    
     public boolean addAresta(int destino, double peso) {
         return this.arestas.add(destino, new Aresta(peso, destino));
-    }
-  /**
-     * Adiciona uma aresta neste vértice para um destino
-     * @param destino Vértice de destino
-     */
-    public boolean addAresta(int destino){
-        return this.arestas.add(destino,new Aresta(0, destino));
-    }
-
-    /**
-     * Verifica se já existe aresta entre este vértice e um destino. Método privado
-     * @param destino Vértice de destino
-     * @return TRUE se existe aresta, FALSE se não
-     */
-    public Aresta existeAresta(int destino){
-        return this.arestas.find(destino);
-
     }
     
     public Aresta[] obterArestas() {
@@ -76,6 +58,16 @@ public class Vertice {
     public boolean removerAresta() {
         this.arestas = new ABB<>();
         return true;
+    }
+
+    public Aresta existearesta(int idVertice) {
+        Aresta [] arestas1 = obterArestas();
+        for (int i =0; i < arestas1.length; i++) {
+            if (arestas1[i].destino() == idVertice) {
+                return arestas1[i];
+            }
+        }
+        return null;
     }
     
     /**

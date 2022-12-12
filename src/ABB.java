@@ -40,23 +40,4 @@ public class ABB<T> {
         }
         return result;
     }
-    
-    public void allValues(){
-    	
-    	System.out.print(this.data);
-    }
-
-    public Integer getKey(T item) {
-        Map.Entry<Integer, String>[] entryArray
-                = data.entrySet().toArray(
-                new Map.Entry[data.entrySet().size()]);
-        if(entryArray.length > 0) {
-            for(int i =0; i < entryArray.length; i++) {
-                if (entryArray[i] == item) {
-                    return entryArray[i].getKey();
-                }
-            }
-        }
-        return null;
-    }
 }

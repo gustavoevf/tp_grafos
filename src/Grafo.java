@@ -47,33 +47,12 @@ public class Grafo {
         this.vertices = new ABB<>();
     }
 
-
     /**
      * Adiciona, se possível, um vértice ao grafo. O vértice é auto-nomeado com o próximo id disponível.
      */
     public boolean addVertice(int id){
         Vertice novo = new Vertice(id);
         return this.vertices.add(id, novo);
-    }
-
-    /**
-     * Adiciona uma aresta entre dois vértices do grafo. 
-     * Não verifica se os vértices pertencem ao grafo.
-     * @param origem Vértice de origem
-     * @param destino Vértice de destino
-     */
-    public boolean addAresta(int origem, int destino){
-        boolean adicionou = false;
-        Vertice saida = this.existeVertice(origem);
-        Vertice chegada = this.existeVertice(destino);
-        if(saida!=null && chegada !=null){
-            saida.addAresta(destino);
-            chegada.addAresta(origem);
-            adicionou = true;
-        }
-        
-        return adicionou;
-
     }
 
     public void buscaEmProfundidade(int inicio) {
@@ -181,7 +160,6 @@ public class Grafo {
         }
     }
 
-
     public void subtrairAresta(int idVerticeA, int idVerticeB) {
         if(this.vertices.find(idVerticeA) != null) {
             Aresta[] arestas = this.vertices.find(idVerticeA).obterArestas();
@@ -226,20 +204,22 @@ public class Grafo {
         return retorno;
     }
 
-    public Vertice existeVertice(int idVertice){
-        return this.vertices.find(idVertice);
+    public ArrayList vizinhos(int idVertice) {
+        Aresta[] vizinhos = existeVertice(idVertice).obterArestas();
+        ArrayList retorno = new ArrayList<Vertice>();
+        for (Aresta ar: vizinhos) {
+            retorno.add(vertices.find(ar.destino()));
+        }
+
+        return  retorno;
     }
 
-    public Aresta existeAresta(int verticeA, int verticeB){
-    	return vertices.find(verticeA).existeAresta(verticeB);
+    public Vertice existeVertice(int idVertice){
+        return this.vertices.find(idVertice);
     }
     
     public Vertice[] obterVertices() {
     	return vertices.allElements(new Vertice[this.ordem()]);
-    }
-    
-    public int tamanho(){
-        return 0;
     }
 
     public int ordem(){

@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 
 public class Main {
@@ -60,5 +61,14 @@ public class Main {
         grafo.grauVizinhos(10);
         System.out.println("");
         System.out.println("");
+
+        // Distância mínima
+        System.out.println("------------------------Caminho minimo do 30 ao 0------------------------");
+        DijkstraAlgorithm djikstra = new DijkstraAlgorithm(grafo);
+        djikstra.execute(grafo.obterVertices()[30], grafo);
+        LinkedList<Vertice> caminhoMinimo = djikstra.getPath(grafo.obterVertices()[0]);
+        for(int i = 0; i < caminhoMinimo.size(); i++) {
+            System.out.println(caminhoMinimo.get(i).getVertice());
+        }
     }
 }
