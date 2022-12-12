@@ -55,6 +55,10 @@ public class Main {
         System.out.println("");
         System.out.println("");
 
-        
+        //Grau de vertice e vizinhos
+        System.out.println("------------------------Grau vertice e vizinhos------------------------");
+        grafo.grauVizinhos(10);
+        System.out.println("");
+        System.out.println("");
     }
 }

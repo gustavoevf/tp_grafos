@@ -211,6 +211,21 @@ public class Grafo {
         }
     }
 
+    public ArrayList grauVizinhos(int idVertice) {
+        ArrayList retorno = new ArrayList();
+
+        retorno.add(existeVertice(idVertice).grau());
+        System.out.println("Vertice " + idVertice + " grau" + retorno.get(0));
+
+        Aresta[] vizinhos = existeVertice(idVertice).obterArestas();
+        for (int i =0; i < vizinhos.length; i++) {
+            retorno.add(existeVertice(vizinhos[i].destino()).grau());
+            System.out.println("Vertice " + vizinhos[i].destino() + " grau " + retorno.get(i + 1));
+        }
+
+        return retorno;
+    }
+
     public Vertice existeVertice(int idVertice){
         return this.vertices.find(idVertice);
     }
